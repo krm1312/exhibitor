@@ -113,6 +113,11 @@ public class ExhibitorCLI
     public static final String DEFAULT_ZOOKEEPER_CONFIG_POLLING = "10000";
     public static final String DEFAULT_ZOOKEEPER_CONFIG_EXHIBITOR_URI_PATH = "/";
 
+    public static final String CLUSTER_NAME = "cassandrahzname";
+    public static final String CASSANDRA_NODES = "cassandranodes";
+    public static final String CASSANDRA_PORT = "cassandraport";
+    public static final String CASSANDRA_KEYSPACE = "cassandrakeyspace";
+
     public ExhibitorCLI()
     {
         hostname = Exhibitor.getHostname();
@@ -158,6 +163,13 @@ public class ExhibitorCLI
         s3Options.addOption(null, S3_REGION, true, "Optional region for S3 calls (e.g. \"eu-west-1\"). Will be used to set the S3 client's endpoint.");
         s3Options.addOption(null, S3_PROXY, true, "Optional configuration used when when connecting to S3 via a proxy. Argument is the path to an AWS credential properties file with four properties (only host, port and protocol are required if using a proxy): " + PropertyBasedS3ClientConfig.PROPERTY_S3_PROXY_HOST + ", " + PropertyBasedS3ClientConfig.PROPERTY_S3_PROXY_PORT + ", " + PropertyBasedS3ClientConfig.PROPERTY_S3_PROXY_USERNAME + ", " + PropertyBasedS3ClientConfig.PROPERTY_S3_PROXY_PASSWORD);
 
+
+        Options cassandraHzOptions = new Options();
+        cassandraHzOptions.addOption(null, CLUSTER_NAME, true, "Cluster name.");
+        cassandraHzOptions.addOption(null, CASSANDRA_NODES, true, "Cassandra nodes.  Comma-delimited.");
+        cassandraHzOptions.addOption(null, CASSANDRA_PORT, true, "Cassandra port.");
+        cassandraHzOptions.addOption(null, CASSANDRA_KEYSPACE, true, "Cassandra keyspace.");
+
         generalOptions = new Options();
         generalOptions.addOption(null, TIMEOUT, true, "Connection timeout (ms) for ZK connections. Default is 30000.");
         generalOptions.addOption(null, LOGLINES, true, "Max lines of logging to keep in memory for display. Default is 1000.");
@@ -183,6 +195,7 @@ public class ExhibitorCLI
         addAll("Configuration Options for Type \"s3\"", s3ConfigOptions);
         addAll("Configuration Options for Type \"zookeeper\"", zookeeperConfigOptions);
         addAll("Configuration Options for Type \"file\"", fileConfigOptions);
+        addAll("Configuration Options for Type \"cassandrahz\"", cassandraHzOptions);
         addAll("Configuration Options for Type \"none\"", noneConfigOptions);
         addAll("Backup Options", backupOptions);
         addAll("Authorization Options", authOptions);

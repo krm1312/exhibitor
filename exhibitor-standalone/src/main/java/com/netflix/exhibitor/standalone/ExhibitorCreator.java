@@ -30,6 +30,7 @@ import com.netflix.exhibitor.core.config.IntConfigs;
 import com.netflix.exhibitor.core.config.JQueryStyle;
 import com.netflix.exhibitor.core.config.PropertyBasedInstanceConfig;
 import com.netflix.exhibitor.core.config.StringConfigs;
+import com.netflix.exhibitor.core.config.cassandrahz.CassandraConfigProvider;
 import com.netflix.exhibitor.core.config.filesystem.FileSystemConfigProvider;
 import com.netflix.exhibitor.core.config.none.NoneConfigProvider;
 import com.netflix.exhibitor.core.config.s3.S3ConfigArguments;
@@ -295,6 +296,9 @@ public class ExhibitorCreator
         {
             configProvider = getZookeeperProvider(commandLine, useHostname, defaultProperties);
         }
+        else if ( configType.equals("cassandrahz") ) {
+            configProvider = getCassandraHzProvider(commandLine, defaultProperties);
+        }
         else if ( configType.equals("none") )
         {
             log.warn("Warning: you have intentionally turned off shared configuration. This mode is meant for special purposes only. Please verify that this is your intent.");
@@ -512,6 +516,16 @@ public class ExhibitorCreator
                 return Collections.singletonList(acl);
             }
         };
+    }
+
+
+    private ConfigProvider getCassandraHzProvider(CommandLine commandLine, Properties defaultProperties) {
+        String clusterName = commandLine.getOptionValue(CLUSTER_NAME, "exhibitor");
+        String cassandarNodes = commandLine.getOptionValue(CASSANDRA_NODES, "localhost");
+        int cassandraPort = Integer.parseInt(commandLine.getOptionValue(CASSANDRA_PORT, "9042"));
+        String cassandraKeyspace = commandLine.getOptionValue(CASSANDRA_KEYSPACE, "exhibitor");
+
+        return new CassandraConfigProvider(defaultProperties, clusterName, cassandarNodes, cassandraPort, cassandraKeyspace);
     }
 
     private ConfigProvider getFileSystemProvider(CommandLine commandLine, Properties defaultProperties) throws IOException
